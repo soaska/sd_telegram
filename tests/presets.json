@@ -1,0 +1,10 @@
+{
+  "default": {
+    "steps": 20,
+    "sampler_name": "Euler"
+  },
+  "test_preset": {
+    "steps": 30,
+    "cfg_scale": 8
+  }
+}

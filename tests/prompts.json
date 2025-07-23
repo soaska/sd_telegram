@@ -1,0 +1,4 @@
+{
+  "default": "a default prompt",
+  "negative_prompt": "a negative prompt"
+}

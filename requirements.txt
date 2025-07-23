@@ -1,9 +1,7 @@
-aiogram==2.22.2
+aiogram>=3.0.0
 wheel
 webuiapi
-translate
-# torch
-transformers
 vk_api
 ok_api
 python-dotenv
+googletrans==4.0.0-rc1

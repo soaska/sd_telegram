@@ -1,0 +1,78 @@
+{
+  "comp": {
+    "steps": 35,
+    "sampler_name": "Euler a",
+    "enable_hr": true,
+    "denoising_strength": 0.5,
+    "hr_upscaler": "4x-AnimeSharp",
+    "hr_second_pass_steps": 10,
+    "cfg_scale": 6,
+    "width": 512,
+    "height": 512,
+    "restore_faces": false,
+    "do_not_save_grid": true,
+    "save_images": true
+  },
+  "mobile": {
+    "steps": 5,
+    "enable_hr": true,
+    "denoising_strength": 0.6,
+    "sampler_name": "DPM++ SDE",
+    "hr_upscaler": "4x_NMKD-Siax_200k",
+    "hr_second_pass_steps": 6,
+    "cfg_scale": 1.6,
+    "width": 832,
+    "height": 1216,
+    "do_not_save_grid": true,
+    "negative_prompt": "",
+    "save_images": true
+  },
+  "no_hr": {
+    "steps": 20,
+    "enable_hr": false,
+    "cfg_scale": 7,
+    "width": 512,
+    "height": 768,
+    "do_not_save_grid": true,
+    "save_images": true
+  },
+  "big": {
+    "steps": 50,
+    "sampler_name": "Euler a",
+    "enable_hr": true,
+    "denoising_strength": 0.7,
+    "hr_upscaler": "4x_NMKD-Siax_200k",
+    "hr_second_pass_steps": 20,
+    "cfg_scale": 7,
+    "width": 512,
+    "height": 768,
+    "restore_faces": false,
+    "do_not_save_grid": true,
+    "save_images": true
+  },
+  "inc": {
+    "steps": 20,
+    "sampler_name": "Euler a",
+    "enable_hr": false,
+    "cfg_scale": 7,
+    "width": 512,
+    "height": 768,
+    "do_not_save_grid": true,
+    "save_images": false
+  },
+  "sdxl": {
+    "enable_hr": true,
+    "denoising_strength": 0.3,
+    "steps": 15,
+    "sampler_name": "DPM++ SDE Karras",
+    "scheduler": "karras",
+    "cfg_scale": 4,
+    "width": 1024,
+    "height": 1024,
+    "restore_faces": false,
+    "hr_upscaler": "4x_NMKD-Siax_200k",
+    "do_not_save_grid": true,
+    "negative_prompt": "FastNegativeV2",
+    "save_images": true
+  }
+}
