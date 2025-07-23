@@ -6,6 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from config import API_BOT_TOKEN, DEBUG
 from handlers import user_commands, callbacks
 from utils.data import BotData
+from utils.commands import set_bot_commands
 from services.sd_api import SdApi
 from services.scripts import Scripts
 
@@ -20,6 +21,7 @@ async def main():
 
     # Initialize Bot and Dispatcher
     bot = Bot(token=API_BOT_TOKEN)
+    await set_bot_commands(bot)
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
 
