@@ -9,6 +9,7 @@ class Scripts:
         self.bot = bot
         self.sd_api = sd_api
         self.bot_data = bot_data
+        self.running_tasks = {}
 
     async def generate_image(self, chat_id):
         params = self.bot_data.get_params()
@@ -46,38 +47,74 @@ class Scripts:
             await self.bot.send_message(chat_id, f"An error occurred: {e}")
 
     async def random_model_script(self, chat_id):
-        models = await self.sd_api.get_models()
-        random.shuffle(models)
+        task = asyncio.create_task(self._random_model_script(chat_id))
+        self.running_tasks[chat_id] = task
 
-        for model in models:
-            await self.sd_api.set_model(model['model_name'])
-            await self.generate_image(chat_id)
+    async def _random_model_script(self, chat_id):
+        try:
+            models = await self.sd_api.get_models()
+            random.shuffle(models)
+
+            for model in models:
+                await self.sd_api.set_model(model['model_name'])
+                await self.generate_image(chat_id)
+        except asyncio.CancelledError:
+            await self.bot.send_message(chat_id, "Random model script stopped.")
+        finally:
+            if chat_id in self.running_tasks:
+                del self.running_tasks[chat_id]
 
     async def random_sampler_script(self, chat_id):
-        samplers = await self.sd_api.get_samplers()
-        random.shuffle(samplers)
+        task = asyncio.create_task(self._random_sampler_script(chat_id))
+        self.running_tasks[chat_id] = task
 
-        for sampler in samplers:
-            self.bot_data.update_params({"sampler_name": sampler['name']})
-            await self.generate_image(chat_id)
+    async def _random_sampler_script(self, chat_id):
+        try:
+            samplers = await self.sd_api.get_samplers()
+            random.shuffle(samplers)
+
+            for sampler in samplers:
+                self.bot_data.update_params({"sampler_name": sampler['name']})
+                await self.generate_image(chat_id)
+        except asyncio.CancelledError:
+            await self.bot.send_message(chat_id, "Random sampler script stopped.")
+        finally:
+            if chat_id in self.running_tasks:
+                del self.running_tasks[chat_id]
 
     async def infinite_script(self, chat_id):
-        while True:
-            # This is a placeholder for the complex prompt generation logic.
-            # We will implement a more robust solution later.
-            prompt = "a beautiful landscape"
-            
-            params = {
-                "prompt": prompt,
-                "cfg_scale": round(random.uniform(4.7, 15), 1),
-                "steps": round(random.uniform(10, 80)),
-                "width": random.randrange(512, 1601, 64),
-                "height": random.randrange(512, 1601, 64),
-            }
-            
-            while params["width"] * params["height"] > 1000000:
-                params["width"] = random.randrange(512, 1601, 64)
-                params["height"] = random.randrange(512, 1601, 64)
+        task = asyncio.create_task(self._infinite_script(chat_id))
+        self.running_tasks[chat_id] = task
 
-            self.bot_data.update_params(params)
-            await self.generate_image(chat_id)
+    async def _infinite_script(self, chat_id):
+        try:
+            while True:
+                # This is a placeholder for the complex prompt generation logic.
+                # We will implement a more robust solution later.
+                prompt = "a beautiful landscape"
+                
+                params = {
+                    "prompt": prompt,
+                    "cfg_scale": round(random.uniform(4.7, 15), 1),
+                    "steps": round(random.uniform(10, 80)),
+                    "width": random.randrange(512, 1601, 64),
+                    "height": random.randrange(512, 1601, 64),
+                }
+                
+                while params["width"] * params["height"] > 1000000:
+                    params["width"] = random.randrange(512, 1601, 64)
+                    params["height"] = random.randrange(512, 1601, 64)
+
+                self.bot_data.update_params(params)
+                await self.generate_image(chat_id)
+        except asyncio.CancelledError:
+            await self.bot.send_message(chat_id, "Infinite generation script stopped.")
+        finally:
+            if chat_id in self.running_tasks:
+                del self.running_tasks[chat_id]
+
+    async def stop_script(self, chat_id):
+        if chat_id in self.running_tasks:
+            self.running_tasks[chat_id].cancel()
+            return True
+        return False

@@ -67,6 +67,14 @@ async def process_steps(message: types.Message, state: FSMContext, bot_data: Bot
     await message.answer("Generating image with custom settings...")
     await scripts.generate_image(message.from_user.id)
 
+@router.message(Command(commands=["stop"]), IsAdmin())
+async def cmd_stop(message: types.Message, scripts: Scripts):
+    """Handles the /stop command."""
+    if await scripts.stop_script(message.from_user.id):
+        await message.answer("Script stopped successfully.")
+    else:
+        await message.answer("No active script to stop.")
+
 @router.message(IsAdmin())
 async def handle_user_input(message: types.Message, state: FSMContext, bot_data: BotData):
     """Handles user input when in a state."""
